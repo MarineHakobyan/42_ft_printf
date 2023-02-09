@@ -12,7 +12,19 @@ int	ft_putitoa_base(unsigned int nbr, char *base)
 	return len;
 }
 
-int	ft_put_hex(unsigned int n, int type)
+int	ft_putitoa_base_ptr(unsigned int nbr, char *base)
+{
+	int len;
+
+	len = 0;
+	if (nbr / 16 != 0)
+		len += ft_putitoa_base(nbr / 16, base);
+	if (nbr % 16 != 16)
+		len += ft_putchar_fd(base[nbr % 16], 1);
+	return len;
+}
+
+int	ft_put_hex(unsigned long long n, int type)
 {
 	int	len;
 
@@ -29,20 +41,68 @@ int	ft_put_hex(unsigned int n, int type)
 	return (len);
 }
 
-int	ft_putptr_fd(void *p)
+// int	ft_putptr_fd(unsigned long long p)
+// {
+// 	int	len;
+// 	unsigned long long	number;
+
+// 	len = 0;
+// 	number = (unsigned long long)p;
+// 	// if (number < 0)
+// 	// {
+// 	// 	len += write(fd, "-", 1);
+// 	// 	number *= -1;
+// 	// }
+// 	len += ft_putstr_fd("0x", 1);
+// 	len += ft_putitoa_base_ptr((unsigned long long)p, "0123456789abcdef");
+// 	return (len);
+// }
+
+int	ft_ptrlen(uintptr_t ptr)
 {
 	int	len;
-	int	number;
 
 	len = 0;
-	number = (unsigned int)p;
-	// if (number < 0)
-	// {
-	// 	len += write(fd, "-", 1);
-	// 	number *= -1;
-	// }
-	len += ft_putstr_fd("0x", 1);
-	len += ft_putitoa_base((unsigned int)p, "0123456789abcdef");
+	while (ptr > 0)
+	{
+		len++;
+		ptr = ptr / 16;
+	}
+	return (len);
+}
+
+void	ft_putptr(uintptr_t ptr)
+{
+	if (ptr >= 16)
+	{
+		ft_putptr(ptr / 16);
+		ft_putptr(ptr % 16);
+	}
+	else
+	{
+		if (ptr <= 9)
+			ft_putchar_fd((ptr + '0'), 1);
+		else
+			ft_putchar_fd((ptr - 10 + 'a'), 1);
+	}
+}
+
+int	ft_ptr(unsigned long long p)
+{
+	int	len;
+
+	len = 2;
+	write(1, "0x", 2);
+	if (p == 0)
+	{
+		len++;
+		write(1, "0", 1);
+	}
+	else
+	{
+		ft_putptr(p);
+		len = len + ft_ptrlen(p);
+	}
 	return (len);
 }
 
@@ -69,7 +129,7 @@ int ft_type(va_list args, const char type)
 	else if (type == 'x' || type == 'X')
 		len += base_choose(va_arg(args, unsigned int), type);
 	else if (type == 'p')
-		len += ft_putptr_fd(va_arg(args, void*));
+		len += ft_ptr(va_arg(args, unsigned long long));
 	else if (type == '%')
 		len += ft_putchar_fd('%', 1);
 	else
