@@ -35,14 +35,14 @@ int	ft_putptr_fd(void *p)
 	int	number;
 
 	len = 0;
-	number = (int)p;
+	number = (unsigned int)p;
 	// if (number < 0)
 	// {
 	// 	len += write(fd, "-", 1);
 	// 	number *= -1;
 	// }
 	len += ft_putstr_fd("0x", 1);
-	len += ft_putitoa_base((int)p, "0123456789abcdef");
+	len += ft_putitoa_base((unsigned int)p, "0123456789abcdef");
 	return (len);
 }
 
