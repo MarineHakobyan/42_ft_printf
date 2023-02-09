@@ -68,7 +68,7 @@ int ft_type(va_list args, const char type)
 	else if (type == 'd' || type == 'i')
 		len += ft_putnbr_fd(va_arg(args, int), 1);
 	else if (type == 'u')
-		len += ft_putnbr_fd(va_arg(args, unsigned long), 1);
+		len += ft_putnbr_fd(va_arg(args, long long), 1);
 	else if (type == 'x' || type == 'X')
 		len += base_choose(va_arg(args, long long), type);
 	else if (type == 'p')
